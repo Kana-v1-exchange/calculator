@@ -1,14 +1,15 @@
 package main
 
 import (
-	postgres "github.com/Kana-v1-exchange/enviroment/postgres"
-	rmq "github.com/Kana-v1-exchange/enviroment/rmq"
-	redis "github.com/Kana-v1-exchange/enviroment/redis"
-	"github.com/Kana-v1-exchange/enviroment/helpers"
 	"encoding/json"
 	"fmt"
 	"strconv"
 	"sync"
+
+	"github.com/Kana-v1-exchange/enviroment/helpers"
+	postgres "github.com/Kana-v1-exchange/enviroment/postgres"
+	redis "github.com/Kana-v1-exchange/enviroment/redis"
+	rmq "github.com/Kana-v1-exchange/enviroment/rmq"
 )
 
 type Calculator struct {
@@ -58,6 +59,10 @@ func (calculator *Calculator) CalculateCurrencies() {
 }
 
 func (calculator *Calculator) recalculateCurrency(usersNum int, currency string, currencyValue float64) float64 {
+	if currency == "USD" {
+		return 1
+	}
+
 	opsKey := currency + helpers.RedisCurrencyOperationsSuffix
 	operations, err := calculator.RedisHandler.Get(opsKey)
 	if err != nil {
