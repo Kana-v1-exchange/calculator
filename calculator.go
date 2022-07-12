@@ -2,12 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 	"sync"
 
-	"github.com/Kana-v1-exchange/enviroment/helpers"
 	postgres "github.com/Kana-v1-exchange/enviroment/postgres"
+	proto "github.com/Kana-v1-exchange/enviroment/protos/serverHandler"
 	redis "github.com/Kana-v1-exchange/enviroment/redis"
 	rmq "github.com/Kana-v1-exchange/enviroment/rmq"
 )
@@ -41,7 +40,12 @@ func (calculator *Calculator) CalculateCurrencies() {
 				return
 			}
 
-			err := calculator.RmqHandler.Write(fmt.Sprintf(`{"%v":"%v"}`, currency, value))
+			message, err := json.Marshal(proto.CurrencyValue{Value: float32(value), Currency: currency})
+			if err != nil {
+				panic(err)
+			}
+
+			err = calculator.RmqHandler.Write(string(message))
 			if err != nil {
 				panic(err)
 			}
@@ -63,7 +67,7 @@ func (calculator *Calculator) recalculateCurrency(usersNum int, currency string,
 		return 1
 	}
 
-	opsKey := currency + helpers.RedisCurrencyOperationsSuffix
+	opsKey := currency + redis.RedisCurrencyOperationsSuffix
 	operations, err := calculator.RedisHandler.Get(opsKey)
 	if err != nil {
 		panic(err)
@@ -78,7 +82,7 @@ func (calculator *Calculator) recalculateCurrency(usersNum int, currency string,
 		return currencyValue
 	}
 
-	opsPricesKey := currency + helpers.RedisCurrencyPriceSuffix
+	opsPricesKey := currency + redis.RedisCurrencyPriceSuffix
 	operationsPrices, err := calculator.RedisHandler.Get(opsPricesKey)
 	if err != nil {
 		panic(err)
@@ -106,6 +110,11 @@ func (calculator *Calculator) recalculateCurrency(usersNum int, currency string,
 
 	for _, price := range prices {
 		pricesSum += price
+	}
+
+	err = calculator.RedisHandler.Set(opsKey, "0")
+	if err != nil {
+		panic(err)
 	}
 
 	return pricesSum / float64(len(prices))
