@@ -2,7 +2,7 @@ module github.com/Kana-v1-exchange/calculator
 
 go 1.18
 
-require github.com/Kana-v1-exchange/enviroment v0.0.0-20220711150755-69303294f8f0
+require github.com/Kana-v1-exchange/enviroment v0.0.0-20220714112010-334c9e550027
 
 require (
 	github.com/golang/protobuf v1.5.2 // indirect

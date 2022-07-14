@@ -5,6 +5,8 @@ github.com/Kana-v1-exchange/enviroment v0.0.0-20220708110045-2b771d135e99 h1:yR0
 github.com/Kana-v1-exchange/enviroment v0.0.0-20220708110045-2b771d135e99/go.mod h1:pe61mzCN3QlQCLs7m3TjX4h0smIkQnOWE2CeJ592M88=
 github.com/Kana-v1-exchange/enviroment v0.0.0-20220711150755-69303294f8f0 h1:/Y0X5/ny1o61tCoFa/2MyHWnsbqd2k1vkS8ERt8QYFQ=
 github.com/Kana-v1-exchange/enviroment v0.0.0-20220711150755-69303294f8f0/go.mod h1:qZ6wLWZ8nicdEMFlxuqduG0Qc2QhpKqjLe201OKvoN0=
+github.com/Kana-v1-exchange/enviroment v0.0.0-20220714112010-334c9e550027 h1:Ld6ibeKFnc+6b5CdAKmwU/ssZuCyLTJpaW2QVJa+Grs=
+github.com/Kana-v1-exchange/enviroment v0.0.0-20220714112010-334c9e550027/go.mod h1:qZ6wLWZ8nicdEMFlxuqduG0Qc2QhpKqjLe201OKvoN0=
 github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"sync"
 
@@ -50,7 +51,7 @@ func (calculator *Calculator) CalculateCurrencies() {
 				panic(err)
 			}
 
-			err = calculator.PostgresHandler.UpdateCurrency(currency, value)
+			err = calculator.PostgresHandler.UpdateCurrency(currency, newCurrencyValue)
 			if err != nil {
 				panic(err)
 			}
@@ -70,7 +71,8 @@ func (calculator *Calculator) recalculateCurrency(usersNum int, currency string,
 	opsKey := currency + redis.RedisCurrencyOperationsSuffix
 	operations, err := calculator.RedisHandler.Get(opsKey)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return currencyValue
 	}
 
 	ops, err := strconv.ParseFloat(operations, 64)
@@ -78,12 +80,12 @@ func (calculator *Calculator) recalculateCurrency(usersNum int, currency string,
 		panic(err)
 	}
 
-	if ops/float64(usersNum) < calculator.operationsPerUserBound {
+	if ops/float64(usersNum) <= calculator.operationsPerUserBound {
 		return currencyValue
 	}
 
 	opsPricesKey := currency + redis.RedisCurrencyPriceSuffix
-	operationsPrices, err := calculator.RedisHandler.Get(opsPricesKey)
+	operationsPrices, err := calculator.RedisHandler.GetList(opsPricesKey)
 	if err != nil {
 		panic(err)
 	}
@@ -95,11 +97,13 @@ func (calculator *Calculator) recalculateCurrency(usersNum int, currency string,
 		}
 	}(opsKey, opsPricesKey)
 
-	prices := make([]float64, 0)
+	prices := make([]float64, len(operationsPrices))
 
-	err = json.Unmarshal([]byte(operationsPrices), &prices)
-	if err != nil {
-		panic(err)
+	for i, operationPrice := range operationsPrices {
+		err = json.Unmarshal([]byte(operationPrice), &prices[i])
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	if len(prices) == 0 {
