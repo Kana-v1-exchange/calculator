@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load("./envs/.env")
+	err := godotenv.Load(getEnvFilePath())
 	if err != nil {
 		panic(err)
 	}
@@ -37,4 +37,12 @@ func main() {
 			calculator.CalculateCurrencies()
 		}
 	}
+}
+
+func getEnvFilePath() string {
+	if isExchangeLocal := os.Getenv("IS_EXCHANGE_IN_CONTAINER"); isExchangeLocal == "true" {
+		return ""
+	}
+
+	return "./envs/.env"
 }
