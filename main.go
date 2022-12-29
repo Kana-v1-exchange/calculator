@@ -40,8 +40,8 @@ func main() {
 }
 
 func getEnvFilePath() string {
-	if isExchangeLocal := os.Getenv("IS_EXCHANGE_IN_CONTAINER"); isExchangeLocal == "true" {
-		return ""
+	if isExchangeLocal := os.Getenv("IS_EXCHANGE_IN_CONTAINER"); isExchangeLocal == "false" {
+		return "./envs/.env"
 	}
 
 	return "./envs/.env"
