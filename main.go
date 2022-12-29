@@ -11,11 +11,13 @@ import (
 )
 
 func main() {
-	err := godotenv.Load(getEnvFilePath())
-	if err != nil {
-		panic(err)
+	if envFiles := getEnvFilePath(); len(envFiles) > 0 {
+		err := godotenv.Load(envFiles...)
+		if err != nil {
+			panic(err)
+		}
 	}
-
+		
 	operationsPerUser, err := strconv.ParseFloat(os.Getenv("OPERATIONS_PER_USER_LIMIT"), 64)
 	if err != nil {
 		panic(err)
@@ -39,10 +41,10 @@ func main() {
 	}
 }
 
-func getEnvFilePath() string {
+func getEnvFilePath() []string {
 	if isExchangeLocal := os.Getenv("IS_EXCHANGE_IN_CONTAINER"); isExchangeLocal == "false" {
-		return "./envs/.env"
+		return []string{"./envs/.env"}
 	}
 
-	return "./envs/.env"
+	return []string{}
 }
